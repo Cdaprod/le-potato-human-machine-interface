@@ -2,7 +2,9 @@
 import asyncio
 import json
 from typing import Any
+
 import paho.mqtt.client as mqtt
+
 from .config import Settings
 from .events import Event, EventBus
 

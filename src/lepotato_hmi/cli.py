@@ -1,6 +1,8 @@
 """Executable Le Potato HMI service entrypoint."""
 import argparse
+
 import uvicorn
+
 from .config import Settings
 
 

@@ -1,6 +1,6 @@
 """Runtime settings. Environment variables can be injected using systemd."""
-from dataclasses import dataclass
 import os
+from dataclasses import dataclass
 
 
 def truthy(name: str, default: bool) -> bool:

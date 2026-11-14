@@ -1,5 +1,5 @@
-from lepotato_hmi.events import Event, EventBus
 from lepotato_hmi.emotions import EmotionEngine
+from lepotato_hmi.events import Event, EventBus
 
 
 def test_bounded_bus_keeps_latest():

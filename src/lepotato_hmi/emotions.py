@@ -1,5 +1,6 @@
 """Event-to-expression state projection. No artificial emotional intelligence implied."""
 from dataclasses import dataclass
+
 from .events import Event
 
 

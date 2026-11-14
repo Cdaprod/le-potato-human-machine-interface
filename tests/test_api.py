@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+
 from lepotato_hmi.application import create_app
 from lepotato_hmi.config import Settings
 
