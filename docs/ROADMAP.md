@@ -1,31 +1,29 @@
 # Roadmap
 
-## v0.1: foundation
-- [x] Installable Python package and CLI
-- [x] HTTP API and browser dashboard with expressive eyes
-- [x] Read-only USB serial device discovery
-- [x] MQTT publish/subscribe integration
-- [x] Bounded in-memory event bus
-- [x] Simulated test events
-- [x] Contribution docs, test scaffolding and CI
-- [ ] Physical Le Potato validation, boot service verification
-- [ ] MQTT integration test in CI against actual Mosquitto
+## v0.1 — software foundation
+- [x] Installable Python package, CLI, REST API and simulation
+- [x] Event bus, read-only serial enumeration and MQTT bridge
+- [x] Expressive browser eyes linked to system events
+- [x] Community scaffolding and Python CI
+- [x] Multi-stage container build, Compose example, Docker smoke-test workflow
+- [ ] Validate actual Docker deployment on Le Potato hardware
+- [ ] Broker integration testing in CI against real Mosquitto
 
-## v0.2: hardware testing
-- [ ] Test fixtures and explicit device adapters
-- [ ] Port ownership, permissions, serial terminal and bounded commands
-- [ ] SQLite event history with retention limits
-- [ ] Reproducible scripted test scenarios
-- [ ] Diagnostic exports and trace capture
+## v0.2 — embedded diagnostics
+- [ ] Device capability registry and USB by-id discovery
+- [ ] Explicit device ownership, bounded test commands and fixture definitions
+- [ ] Persistent event history with retention controls
+- [ ] Authenticated, authorization-aware LAN dashboard and MQTT service
+- [ ] Portable diagnostics export
 
-## v0.3: eyes / physical expression
-- [ ] Identify GPIO LCD controller and wiring
-- [ ] Create optional framebuffer/I2C/SPI driver backend
-- [ ] Configurable expression rules, easing, attention and timeouts
-- [ ] Authenticated browser sessions and secure LAN dashboard
+## v0.3 — expressive interface
+- [ ] Verify GPIO-connected LCD controller, resolution and pin mapping
+- [ ] Implement optional I2C/SPI LCD renderer without coupling to the backend
+- [ ] Configurable behavior state machine with easing/blink timing
+- [ ] Adaptive events and user-driven attention triggers
 
-## v1.0: community
-- [ ] Stable event schemas and plugin interfaces
-- [ ] Release automation and verified deployment recipes
-- [ ] Example adapters for ESP-IDF, CircuitPython, GRBL and OctoPrint
-- [ ] Hardware capability manifests and docs for contributor boards
+## v1.0 — community platform
+- [ ] Stable plugin/adapter API with protocol contract tests
+- [ ] ARM64 hardware CI and documented production deployment
+- [ ] Sample integrations for CircuitPython, ESP-IDF, GRBL and OctoPrint
+- [ ] Supply-chain signing, SBOM and security review

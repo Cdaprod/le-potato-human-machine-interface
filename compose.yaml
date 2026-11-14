@@ -1,0 +1,43 @@
+name: lepotato-hmi
+services:
+  hmi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lepotato-hmi:local
+    restart: unless-stopped
+    init: true
+    environment:
+      HMI_HOST: 0.0.0.0
+      HMI_PORT: "8080"
+      HMI_API_TOKEN: ${HMI_API_TOKEN:?Set HMI_API_TOKEN in a local .env file}
+      HMI_MQTT_ENABLED: "true"
+      HMI_MQTT_HOST: mosquitto
+      HMI_MQTT_PORT: "1883"
+      HMI_MQTT_TOPIC_PREFIX: ${HMI_MQTT_TOPIC_PREFIX:-benchlab}
+      HMI_SERIAL_ENABLED: "false"
+    ports:
+      - "127.0.0.1:${HMI_HTTP_PORT:-8080}:8080"
+    depends_on:
+      mosquitto:
+        condition: service_started
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    cap_drop:
+      - ALL
+    pids_limit: 128
+    mem_limit: 512m
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    volumes:
+      - ./deploy/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    expose:
+      - "1883"
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 128m

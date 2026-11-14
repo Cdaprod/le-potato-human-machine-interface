@@ -1,5 +1,8 @@
 const $ = id => document.getElementById(id);
 const eyes = $('eyes');
+const storedToken = sessionStorage.getItem('hmi_token') || '';
+const authHeaders = () => storedToken ? {Authorization: `Bearer ${storedToken}`} : {};
+
 function glance(){
   const x = Math.round((Math.random()-.5)*28), y = Math.round((Math.random()-.5)*17);
   document.querySelectorAll('.eye i').forEach(p=>p.style.transform=`translate(${x}px,${y}px)`);
@@ -12,7 +15,8 @@ function setMood(value){
   document.querySelectorAll('.eye').forEach(el=>el.style.height=size);
 }
 async function api(path, options={}){
-  const response=await fetch(path,options);
+  const response=await fetch(path,{...options,headers:{...authHeaders(),...(options.headers||{})}});
+  if(response.status===401){sessionStorage.removeItem('hmi_token');window.location.replace('/');throw Error('Authentication required')}
   if(!response.ok)throw Error(`${response.status} ${await response.text()}`);
   return response.json();
 }

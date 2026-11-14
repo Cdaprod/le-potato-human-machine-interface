@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in — Le Potato HMI</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><main style="max-width:520px;margin:10vh auto"><header><h1>LE POTATO <span>HMI</span></h1><small>CDAPROD / DEVICE TESTING AND MESSAGING</small></header>
+<article><h2>Dashboard access</h2><p>Enter the configured HMI API token. It is held in this browser tab's session storage, not written to a cookie.</p>
+<form id="login"><input name="token" type="password" placeholder="HMI API token" required autocomplete="off" style="flex:1"><button type="submit">Continue</button></form><p role="alert" id="error"></p></article>
+<footer>Use this interface only over localhost or a trusted TLS connection. <a href="https://github.com/Cdaprod/le-potato-human-machine-interface">Source</a></footer></main>
+<script>
+document.getElementById('login').addEventListener('submit',async event=>{
+  event.preventDefault();
+  const token=new FormData(event.target).get('token');
+  const response=await fetch('/api/auth/check',{headers:{Authorization:'Bearer '+token}});
+  if(response.ok){sessionStorage.setItem('hmi_token',token);window.location.assign('/dashboard');}
+  else{document.getElementById('error').textContent='Access denied ('+response.status+').';}
+});
+</script></body></html>

@@ -81,6 +81,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
 
+    if settings.host not in ("127.0.0.1", "localhost", "::1") and not settings.api_token:
+        raise ValueError("Non-loopback binding requires HMI_API_TOKEN")
+
     app = FastAPI(title="Le Potato HMI", version="0.1.0", lifespan=lifespan)
 
     def require_token(authorization: str | None = Header(default=None)):
@@ -97,11 +100,25 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/")
     def home():
+        if settings.api_token:
+            return FileResponse(STATIC / "login.html")
         return FileResponse(STATIC / "index.html")
 
-    @app.get("/api/health", dependencies=[Depends(require_token)])
+    @app.get("/api/health")
+    def health():
+        return {"status": "ok"}
+
+    @app.get("/api/auth/check", dependencies=[Depends(require_token)])
+    def auth_check():
+        return {"authenticated": True}
+
+    @app.get("/api/health/legacy", dependencies=[Depends(require_token)])
     def health():
         return {"status": "ok", "mqtt_connected": bool(bridge and bridge.connected)}
+
+    @app.get("/dashboard")
+    def dashboard(authorization: str | None = Header(default=None)):
+        return FileResponse(STATIC / "index.html")
 
     @app.get("/api/status", dependencies=[Depends(require_token)])
     def status():
