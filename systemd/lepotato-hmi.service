@@ -1,0 +1,21 @@
+[Unit]
+Description=Le Potato embedded hardware dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lepotato-hmi
+Group=lepotato-hmi
+WorkingDirectory=/opt/lepotato-hmi
+EnvironmentFile=-/etc/lepotato-hmi.env
+ExecStart=/opt/lepotato-hmi/.venv/bin/lepotato-hmi
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+name: Docker
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose
+        env:
+          HMI_API_TOKEN: compose-ci-placeholder-not-production
+        run: docker compose config --quiet
+      - name: Build image
+        run: docker build --pull --tag lepotato-hmi:ci .
+      - name: Smoke test container
+        run: |
+          docker run -d --name hmi-smoke -p 127.0.0.1:18080:8080 \
+            -e HMI_API_TOKEN=smoke-test-secret -e HMI_MQTT_ENABLED=false \
+            -e HMI_SERIAL_ENABLED=false lepotato-hmi:ci
+          trap 'docker logs hmi-smoke; docker rm -f hmi-smoke' EXIT
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:18080/api/health >/dev/null; then break; fi
+            sleep 2
+          done
+          curl --fail --silent http://127.0.0.1:18080/api/health
+          curl --fail --silent -H 'Authorization: Bearer smoke-test-secret' \
+            http://127.0.0.1:18080/api/status
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/api/status)" = "401"
