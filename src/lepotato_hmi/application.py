@@ -113,7 +113,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {"authenticated": True}
 
     @app.get("/api/health/legacy", dependencies=[Depends(require_token)])
-    def health():
+    def health_legacy():
         return {"status": "ok", "mqtt_connected": bool(bridge and bridge.connected)}
 
     @app.get("/dashboard")
